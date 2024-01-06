@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import Utils from '../utils';
 import Redirect from '../models/redirectModel';
+import { UUID } from 'crypto';
 
 // Use destructuring to import config function from dotenv
 import { config } from 'dotenv';
@@ -32,11 +33,13 @@ app.listen(port, () => {
 
 app.post('/redirection', async (req: Request, res: Response) => {
     try {
-        const { url: urlToRedirect, hours: hoursToKeepOnline } = req.query;
+        const { url: urlToRedirect, hours: hoursToKeepOnline, apiKey } = req.query;
+
+        if (apiKey !== process.env.APIKEY) return res.status(401).send('Unauthorized');
 
         if (!urlToRedirect || 
             !hoursToKeepOnline || 
-            typeof urlToRedirect != "string" || 
+            typeof urlToRedirect !== "string" || 
             !urlToRedirect.startsWith('http') || 
             isNaN(Number(hoursToKeepOnline))
         ) {
