@@ -63,7 +63,7 @@ app.post('/redirection', async (req: Request, res: Response) => {
             return res.status(500).send('Internal server error');
         }
 
-        res.status(200).send('OK');
+        res.status(200).send(process.env.SERVERADDRESS + '/' + generatedCode);
     } catch(err) {
         console.error(err);
         res.status(500).send("Internal server error");
